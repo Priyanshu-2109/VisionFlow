@@ -9,15 +9,21 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@mantine/core": "^7.17.3",
+    "@mantinex/mantine-logo": "^1.1.0",
+    "@tabler/icons-react": "^3.31.0",
+    "framer-motion": "^12.6.2",
+    "lucide-react": "^0.485.0",
+    "next": "15.2.4",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "next": "15.2.4"
+    "react-bits": "^1.0.5",
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
-    "tailwindcss": "^4",
     "eslint": "^9",
     "eslint-config-next": "15.2.4",
-    "@eslint/eslintrc": "^3"
+    "tailwindcss": "^4"
   }
 }
