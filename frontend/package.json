@@ -11,6 +11,7 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
+    "@lottiefiles/dotlottie-react": "^0.13.2",
     "@mantine/core": "^7.17.3",
     "@mantinex/mantine-logo": "^1.1.0",
     "@mui/icons-material": "^7.0.1",
