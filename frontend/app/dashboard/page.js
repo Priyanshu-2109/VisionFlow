@@ -1,128 +1,103 @@
 "use client";
-import { usePathname } from "next/navigation";
-import { useState } from "react";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import {
-  IconGauge,
-  IconNotes,
-  IconCalendarStats,
-  IconPresentationAnalytics,
-  IconFileAnalytics,
-  IconAdjustments,
-  IconLock,
-} from "@tabler/icons-react";
-import Link from "next/link";
 
-const mockdata = [
-  { label: "Dashboard", icon: <IconGauge size={20} />, link: "/userdashboard" },
-{
-    label: "Market news",
-    icon: <IconNotes size={20} />,
-    links: [
-      { label: "Overview", link: "/overview" },
-      { label: "Forecasts", link: "/forecasts" },
-      { label: "Outlook", link: "/outlook" },
-      { label: "Real time", link: "/realtime" },
-    ],
-  },
-  { label: "Analytics", icon: <IconPresentationAnalytics size={20} />, link: "/analytics" },
-  { label: "Contracts", icon: <IconFileAnalytics size={20} />, link: "/contracts" },
-  { label: "Settings", icon: <IconAdjustments size={20} />, link: "/settings" },
-  {
-    label: "Security",
-    icon: <IconLock size={20} />,
-    links: [
-      { label: "Enable 2FA", link: "/security/2fa" },
-      { label: "Change password", link: "/security/password" },
-      { label: "Recovery codes", link: "/security/recovery" },
-    ],
-  },
+import { useState } from 'react';
+import Link from 'next/link';
+import {
+  IconCalendarStats,
+  IconDeviceDesktopAnalytics,
+  IconFingerprint,
+  IconGauge,
+  IconHome2,
+  IconSettings,
+  IconUser,
+} from '@tabler/icons-react';
+
+const mainLinksMockdata = [
+  { icon: IconHome2, label: 'Home' },
+  { icon: IconGauge, label: 'Dashboard' },
+  { icon: IconDeviceDesktopAnalytics, label: 'Analytics' },
+  { icon: IconCalendarStats, label: 'Releases' },
+  { icon: IconUser, label: 'Account' },
+  { icon: IconFingerprint, label: 'Security' },
+  { icon: IconSettings, label: 'Settings' },
 ];
 
-const SidebarLayout = ({ children }) => {
-  const pathname = usePathname();
-  const [openMenu, setOpenMenu] = useState({});
+const linksMockdata = [
+  'Security',
+  'Settings',
+  'Dashboard',
+  'Releases',
+  'Account',
+  'Orders',
+  'Clients',
+  'Databases',
+  'Pull Requests',
+  'Open Issues',
+  'Wiki pages',
+];
 
-  const toggleMenu = (label) => {
-    setOpenMenu((prev) => ({ ...prev, [label]: !prev[label] }));
-  };
-
-  // Extract the page name from the path
-  const pageTitle = mockdata
-    .flatMap((item) => [item, ...(item.links || [])])
-    .find((item) => item.link === pathname)?.label || "Dashboard";
+export default function DoubleNavbar() {
+  const [active, setActive] = useState('Releases');
+  const [activeLink, setActiveLink] = useState('Settings');
 
   return (
-    <div className="flex h-screen">
-      {/* Sidebar */}
-      <nav className="w-64 bg-gray-900 text-white flex flex-col">
-        {/* Sidebar Header */}
-        <div className="p-5 flex justify-between items-center">
-          <h2 className="text-xl font-bold">VisionFlow</h2>
-          <span className="text-sm bg-gray-700 px-2 py-1 rounded">v0.0.1</span>
-        </div>
-
-        {/* Sidebar Links */}
-        <div className="flex-1 overflow-y-auto">
-          {mockdata.map((item) => (
-            <div key={item.label} className="p-2">
-              <div
-                className="flex items-center justify-between p-3 hover:bg-gray-800 cursor-pointer rounded-lg"
-                onClick={() => item.links && toggleMenu(item.label)}
-              >
-                <div className="flex items-center gap-2">
-                  {item.icon}
-                  {item.link ? (
-                    <Link href={item.link} className="text-sm">
-                      {item.label}
-                    </Link>
-                  ) : (
-                    <span className="text-sm">{item.label}</span>
-                  )}
-                </div>
-                {item.links && (
-                  <ArrowForwardIosIcon
-                    className={`transition-transform ${openMenu[item.label] ? "rotate-90" : ""}`}
-                    fontSize="x-small"
-                  />
-                )}
-              </div>
-
-              {/* Submenu */}
-              <div
-                className={`overflow-hidden transition-all duration-500 ease-in-out ${
-                  openMenu[item.label] ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
-                }`}
-              >
-                {item.links &&
-                  item.links.map((sub) => (
-                    <Link key={sub.label} href={sub.link} className="block text-sm p-2 hover:bg-gray-800 rounded">
-                      {sub.label}
-                    </Link>
-                  ))}
-              </div>
+    <nav className="bg-[rgb(10,10,10)] h-screen w-[300px] flex flex-col border-r border-gray-700">
+      <div className="flex flex-1">
+        {/* Left sidebar with icons */}
+        <div className="flex-none w-[60px] bg-[rgb(10,10,10)] flex flex-col items-center border-r border-gray-700">
+          {/* Logo */}
+          <div className="w-full flex justify-center h-[60px] pt-4 border-b border-gray-700 mb-6">
+            <div className="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center text-white font-bold">
+              ?
             </div>
+          </div>
+          
+          {/* Main navigation icons */}
+          {mainLinksMockdata.map((link) => (
+            <button
+              key={link.label}
+              onClick={() => setActive(link.label)}
+              className={`w-11 h-11 mb-2 flex items-center justify-center rounded-md transition-colors ${
+                active === link.label
+                  ? 'bg-gray-800 text-white'
+                  : 'text-gray-400 hover:bg-gray-700 hover:text-white'
+              }`}
+              title={link.label}
+            >
+              <link.icon size={22} stroke={1.5} />
+            </button>
           ))}
         </div>
-
-        {/* Sidebar Footer */}
-        <div className="p-5 border-t border-gray-700">
-          <button className="w-full bg-gray-800 p-3 rounded-lg hover:bg-gray-700">User Settings</button>
+        
+        {/* Right sidebar with text links */}
+        <div className="flex-1 bg-[rgb(20,20,20)]">
+          {/* Title */}
+          <h4 className="font-medium text-lg text-white bg-[rgb(10,10,10)] px-4 py-[18px] h-[60px] border-b border-gray-700 mb-6">
+            {active}
+          </h4>
+          
+          {/* Links */}
+          <div className="px-2">
+            {linksMockdata.map((link) => (
+              <Link
+                href="#"
+                key={link}
+                onClick={(event) => {
+                  event.preventDefault();
+                  setActiveLink(link);
+                }}
+                className={`block text-sm font-medium h-11 leading-[44px] px-4 rounded-r-md transition-colors ${
+                  activeLink === link
+                    ? 'bg-gray-800 text-white'
+                    : 'text-gray-400 hover:bg-gray-700 hover:text-white'
+                }`}
+              >
+                {link}
+              </Link>
+            ))}
+          </div>
         </div>
-      </nav>
-
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col">
-        {/* Top Navbar */}
-        <div className="bg-gray-800 text-white p-4 text-xl font-semibold">
-          {pageTitle}
-        </div>
-
-        {/* Page Content */}
-        <div className="flex-1 p-6">{children}</div>
       </div>
-    </div>
+    </nav>
   );
-};
-
-export default SidebarLayout;
+}
