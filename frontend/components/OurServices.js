@@ -11,7 +11,7 @@ const services = [
 
 const OurServices = () => {
   return (
-    <div className="relative bg-gradient-to-b bg-rgb(10,10,10) text-white py-16 px-6 md:px-12 lg:px-24">
+    <div className="relative bg-gradient-to-b bg-rgb(10,10,10) text-white py-16 px-6 md:px-12 lg:px-24 mb-20">
       {/* Decorative Background */}
       <div className="absolute inset-0 pointer-events-none opacity-20">
         <div className="w-96 h-96 bg-gradient-to-r from-green-400 to-blue-500 rounded-full blur-3xl absolute top-10 left-10"></div>

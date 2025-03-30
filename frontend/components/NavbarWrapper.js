@@ -7,7 +7,7 @@ export default function NavbarWrapper() {
   const pathname = usePathname();
 
   // Hide Navbar on the login page
-  if (pathname === "/login" ||pathname === "/signup"  || pathname ==="/dashboard") return null;
+  if (pathname ==="/dashboard") return null;
 
   return <Navbar />;
 }

@@ -4,7 +4,7 @@ import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
 const BusinessImpact = () => {
   return (
-    <section className="bg-[rgb(10,10,10)] text-white min-h-screen flex items-center px-12">
+    <section className="bg-[rgb(10,10,10)] text-white mb-10 flex items-center px-12">
       {/* Left Side: Text Content */}
       <div className="w-1/2">
         <h1 className="text-5xl font-bold">

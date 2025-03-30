@@ -11,6 +11,7 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
+    "@heroui/button": "^2.2.16",
     "@lottiefiles/dotlottie-react": "^0.13.2",
     "@mantine/core": "^7.17.3",
     "@mantinex/mantine-logo": "^1.1.0",
@@ -20,11 +21,13 @@
     "framer-motion": "^12.6.2",
     "lucide-react": "^0.485.0",
     "next": "15.2.4",
+    "ogl": "^1.0.11",
     "postcss": "^8.5.3",
     "react": "^19.0.0",
     "react-bits": "^1.0.5",
     "react-dom": "^19.0.0",
-    "react-icons": "^5.5.0"
+    "react-icons": "^5.5.0",
+    "react-lottie-player": "^2.1.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
