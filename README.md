@@ -1,6 +1,7 @@
 # **VisionFlow - AI-Powered Business Strategist**  
 
-![VisionFlow](https://via.placeholder.com/1200x400?text=VisionFlow)  
+![Vision flow](https://github.com/user-attachments/assets/439d0aa2-d1b6-4012-a89d-02ee5c2d4345)
+ 
 
 ### **Empowering Businesses with AI-Driven Insights & Automation**  
 
