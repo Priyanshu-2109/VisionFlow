@@ -35,7 +35,12 @@ export default function Navbar() {
     <>
       <nav className="sticky top-0 w-full bg-[rgb(10,10,10)] text-white flex items-center justify-between px-12 h-20 border-b border-gray-700 z-50 transition duration-300 ease-in-out backdrop-blur-lg bg-opacity-70">
         {/* Left Brand Name */}
-        <div className="text-2xl font-bold tracking-wide">VisionFlow</div>
+        <button
+          onClick={() => scrollToSection("hero")}
+          className="text-2xl font-bold tracking-wide"
+        >
+          VisionFlow
+        </button>
 
         {/* Middle Links - Centered */}
         <div className="absolute left-1/2 transform -translate-x-1/2 flex space-x-8 text-lg font-medium">
@@ -53,7 +58,7 @@ export default function Navbar() {
         {/* Right Buttons */}
         <div className="flex space-x-6 text-lg items-center font-medium">
           <button
-            onClick={() => scrollToSection("contact")}
+            onClick={() => scrollToSection("footer")}
             className="hover:text-gray-400 transition"
           >
             Contact

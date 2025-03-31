@@ -1,9 +1,9 @@
 import React from "react";
-import { Facebook, Twitter, Instagram, Linkedin } from "lucide-react";
+import { Facebook, Twitter, Instagram, Linkedin, Mail, MapPin, Phone } from "lucide-react";
 
 const Footer = () => {
   return (
-    <footer className="bg-[rgb(10,10,10)] text-white py-12 px-6">
+    <footer id="footer" className="bg-[rgb(10,10,10)] text-white py-12 px-6">
       {/* Top Divider */}
       <div className="border-t border-gray-600 w-full mb-8"></div>
 
@@ -14,7 +14,21 @@ const Footer = () => {
           <p className="text-gray-400 text-sm mb-4">
             Empowering businesses with AI-driven automation and seamless data integration.
           </p>
-          <div className="flex space-x-4">
+          
+           {/* Contact Information  */}
+                <div className="flex items-center space-x-2 text-gray-400 mb-3">
+                <Mail className="w-4 h-4 text-white" />
+                <a href="mailto:visionflow.business@gmail.com" className="hover:text-blue-400 transition">
+                visionflow.business@gmail.com
+                </a>
+                </div>
+                <div className="flex items-center space-x-2 text-gray-400 mb-5">
+                <MapPin className="w-4 h-4 text-white" />
+                <span>Gujarat, India</span>
+                </div>
+                
+                {/* Social Media Icons */}
+          <div className="flex space-x-4 mt-4">
             <a
               href="https://facebook.com"
               target="_blank"
@@ -74,11 +88,14 @@ const Footer = () => {
             Stay updated with the latest news and exclusive offers.
           </p>
           <form className="flex flex-col space-y-4">
-            <input
-              type="email"
-              placeholder="example@gmail.com"
-              className="px-4 py-2 rounded-md bg-gray-800 text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+            <div className="relative">
+              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5" />
+              <input
+                type="email"
+                placeholder="Your email address"
+                className="pl-10 w-full px-4 py-2 rounded-md bg-gray-800 text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
             <button
               type="submit"
               className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-md font-medium transition"

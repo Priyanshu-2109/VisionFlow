@@ -7,11 +7,11 @@ import AiEffect from "@/components/AiEffect";
 export default function Home() {
   return (
     <>
-        <HeroSection />
-        <WhyUs />
-        <OurServices />
-        <How />
-        <AiEffect />
+      <HeroSection />
+      <WhyUs />
+      <OurServices />
+      <How />
+      <AiEffect />
     </>
   );
 }

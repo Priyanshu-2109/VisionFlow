@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import Squares from "./ui/Squares"; // Import the Squares component
+import Link from "next/link";
 
 export default function HeroSection() {
   return (
@@ -21,7 +22,7 @@ export default function HeroSection() {
       {/* Content */}
       <div className="relative z-20 max-w-3xl">
         <h1 className="text-6xl font-bold leading-tight">
-          Your fastest path to production
+        Transform Data into Business Growth
         </h1>
         <p className="text-xl text-gray-400 mt-6">
           Empower your business with our CRM tool - streamline customer
@@ -29,10 +30,16 @@ export default function HeroSection() {
         </p>
         <div className="mt-8 flex space-x-4">
           <button className="bg-white text-black px-6 py-3 text-lg font-medium rounded-md flex items-center">
-            Get Started for Free →
+           <Link
+           href={"/dashboard"}>
+           Get Started →
+           </Link>
           </button>
           <button className="border border-gray-500 text-white px-6 py-3 text-lg font-medium rounded-md flex items-center">
+            <Link
+           href={"/contactsales"}>
             Contact Sales →
+            </Link>
           </button>
         </div>
       </div>
