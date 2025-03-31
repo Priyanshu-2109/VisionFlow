@@ -41,10 +41,17 @@ VisionFlow is an **AI-powered e-commerce business strategist** that **optimizes 
 
 ## **👀 Look at Our site**
 
-![Screenshot 2025-03-31 140901](https://github.com/user-attachments/assets/4067e137-2a04-4b9e-ada3-5a5e2c39db51)
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/4067e137-2a04-4b9e-ada3-5a5e2c39db51" height="350" width="auto" alt="Home Page">
+</p>
 
-![Screenshot 2025-03-31 143850](https://github.com/user-attachments/assets/deb3375a-fdcc-409f-8081-6bba12310ef8)
-(Dashboard look may vary with UI updates or enhancements)
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/deb3375a-fdcc-409f-8081-6bba12310ef8" height="350" alt="Dashboard">
+</p>
+
+<p align="center">
+  <i>(Dashboard look may vary with UI updates or enhancements)</i>
+</p>
 
 ---
 
