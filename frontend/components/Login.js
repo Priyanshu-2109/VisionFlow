@@ -178,7 +178,7 @@ export default function Login({ onClose }) {
         <p className="text-center text-gray-400 text-sm mt-6">
           {state === "Login" ? (
             <>
-              Don't have an account?{" "}
+              Don&apos;t have an account?{" "}
               <span
                 className="text-blue-400 hover:text-blue-300 cursor-pointer transition-colors"
                 onClick={() => setState("Sign Up")}
