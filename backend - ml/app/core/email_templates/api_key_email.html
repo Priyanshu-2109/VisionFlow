@@ -1,0 +1,75 @@
+{% extends "base.html" %} {% block content %}
+<h2>New API Key Generated</h2>
+
+<p>Hi {{ username }},</p>
+
+<p>
+  A new API key has been generated for your {{ project_name }} account. Please
+  store this key securely as it will not be shown again:
+</p>
+
+<div
+  style="
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+    margin: 20px 0;
+    font-family: monospace;
+  ">
+  {{ api_key }}
+</div>
+
+<p><strong>Important Security Notes:</strong></p>
+<ul>
+  <li>Keep this API key secure and do not share it with anyone</li>
+  <li>The API key grants access to your account's resources</li>
+  <li>
+    If this key is compromised, revoke it immediately from your account settings
+  </li>
+  <li>
+    Use environment variables or secure vaults to store this key in your
+    applications
+  </li>
+  <li>Regularly rotate your API keys as a security best practice</li>
+</ul>
+
+<p>
+  You can manage your API keys, including revoking them, from your account
+  settings:
+</p>
+
+<table
+  role="presentation"
+  class="btn btn-primary"
+  cellpadding="0"
+  cellspacing="0"
+  border="0">
+  <tbody>
+    <tr>
+      <td align="center">
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+          <tbody>
+            <tr>
+              <td>
+                <a href="{{ frontend_url }}/settings/api-keys" target="_blank"
+                  >Manage API Keys</a
+                >
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+  If you did not request this API key, please revoke it immediately and contact
+  our support team.
+</p>
+
+<p>
+  Best regards,<br />
+  The {{ project_name }} Team
+</p>
+{% endblock %}

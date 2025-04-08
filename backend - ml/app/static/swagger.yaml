@@ -1,0 +1,153 @@
+openapi: 3.0.0
+info:
+  title: Business Intelligence Platform API
+  description: API documentation for the Business Intelligence Platform
+  version: 1.0.0
+  contact:
+    email: support@example.com
+
+servers:
+  - url: http://localhost:5000/api/v1
+    description: Development server
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Error message
+        status_code:
+          type: integer
+          description: HTTP status code
+
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+          description: Current page number
+        per_page:
+          type: integer
+          description: Items per page
+        total_pages:
+          type: integer
+          description: Total number of pages
+        total_items:
+          type: integer
+          description: Total number of items
+
+paths:
+  /health:
+    get:
+      summary: Health check endpoint
+      description: Check the health status of the application and its dependencies
+      responses:
+        "200":
+          description: System is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: [healthy]
+                  services:
+                    type: object
+                    properties:
+                      database:
+                        type: boolean
+                      redis:
+                        type: boolean
+                  system:
+                    type: object
+                    properties:
+                      disk_space:
+                        type: object
+                      memory:
+                        type: object
+                      cpu:
+                        type: number
+        "503":
+          description: System is unhealthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /readiness:
+    get:
+      summary: Readiness check endpoint
+      description: Check if the application is ready to handle requests
+      responses:
+        "200":
+          description: Application is ready
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: [ready]
+                  services:
+                    type: object
+                    properties:
+                      database:
+                        type: boolean
+                      redis:
+                        type: boolean
+        "503":
+          description: Application is not ready
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /liveness:
+    get:
+      summary: Liveness check endpoint
+      description: Check if the application is alive and running
+      responses:
+        "200":
+          description: Application is alive
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: [alive]
+                  system:
+                    type: object
+                    properties:
+                      disk_space:
+                        type: object
+                      memory:
+                        type: object
+                      cpu:
+                        type: number
+        "503":
+          description: Application is in critical state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+security:
+  - bearerAuth: []
+
+tags:
+  - name: Health
+    description: Health check endpoints
+  - name: API
+    description: API endpoints

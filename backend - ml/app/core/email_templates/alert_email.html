@@ -1,0 +1,73 @@
+{% extends "base.html" %} {% block content %}
+<h2>{{ alert_type }} Alert</h2>
+
+<p>Hi,</p>
+
+<p>This is an automated alert from {{ project_name }}.</p>
+
+<div
+  style="background-color: {% if alert_type == 'Critical' %}#fde8e8{% elif alert_type == 'Warning' %}#fdf6b2{% else %}#e1effe{% endif %}; padding: 15px; border-radius: 5px; margin: 20px 0;">
+  <p
+    style="margin: 0; color: {% if alert_type == 'Critical' %}#9b1c1c{% elif alert_type == 'Warning' %}#8e4b10{% else %}#1e429f{% endif %};">
+    <strong>{{ alert_message }}</strong>
+  </p>
+</div>
+
+<h3>Alert Details:</h3>
+<table role="presentation" style="width: 100%; margin-bottom: 20px">
+  <tbody>
+    {% for key, value in alert_data.items() %}
+    <tr>
+      <td
+        style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold">
+        {{ key }}
+      </td>
+      <td style="padding: 8px; border-bottom: 1px solid #eee">{{ value }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<p>You can view more details and take action in the dashboard:</p>
+
+<table
+  role="presentation"
+  class="btn btn-primary"
+  cellpadding="0"
+  cellspacing="0"
+  border="0">
+  <tbody>
+    <tr>
+      <td align="center">
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+          <tbody>
+            <tr>
+              <td>
+                <a href="{{ frontend_url }}/alerts" target="_blank"
+                  >View Alert Details</a
+                >
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+  If you believe this alert was sent in error or if you need assistance, please
+  contact our support team.
+</p>
+
+<p>
+  Best regards,<br />
+  The {{ project_name }} Team
+</p>
+
+<p style="font-size: 12px; color: #666">
+  You are receiving this email because you are subscribed to {{ alert_type }}
+  alerts. You can manage your alert preferences in your
+  <a href="{{ frontend_url }}/settings/notifications">notification settings</a>.
+</p>
+{% endblock %}

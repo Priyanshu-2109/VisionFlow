@@ -1,0 +1,191 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  scrape_timeout: 10s
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          # - alertmanager:9093
+
+# Rule files to load
+rule_files:
+  - "rules/*.yml"
+
+# Scrape configurations
+scrape_configs:
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]
+    metrics_path: "/metrics"
+    scheme: "http"
+
+  - job_name: "backend"
+    static_configs:
+      - targets: ["web:8000"]
+    metrics_path: "/metrics"
+    scheme: "http"
+    scrape_interval: 10s
+    scrape_timeout: 5s
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+        replacement: "backend"
+
+  - job_name: "node-exporter"
+    static_configs:
+      - targets: ["node-exporter:9100"]
+    metrics_path: "/metrics"
+    scheme: "http"
+    scrape_interval: 30s
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+        replacement: "node-exporter"
+
+  - job_name: "cadvisor"
+    static_configs:
+      - targets: ["cadvisor:8080"]
+    metrics_path: "/metrics"
+    scheme: "http"
+    scrape_interval: 30s
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+        replacement: "cadvisor"
+
+  - job_name: "redis-exporter"
+    static_configs:
+      - targets: ["redis-exporter:9121"]
+    metrics_path: "/metrics"
+    scheme: "http"
+    scrape_interval: 30s
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+        replacement: "redis"
+
+  - job_name: "postgres-exporter"
+    static_configs:
+      - targets: ["postgres-exporter:9187"]
+    metrics_path: "/metrics"
+    scheme: "http"
+    scrape_interval: 30s
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+        replacement: "postgres"
+
+  - job_name: "celery"
+    static_configs:
+      - targets: ["flower:5555"]
+    metrics_path: "/metrics"
+    scheme: "http"
+    scrape_interval: 30s
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+        replacement: "celery"
+
+  # Service discovery
+  - job_name: "docker"
+    docker_sd_configs:
+      - host: unix:///var/run/docker.sock
+        refresh_interval: 30s
+    relabel_configs:
+      - source_labels: [__meta_docker_container_name]
+        regex: "/(.*)"
+        target_label: container
+      - source_labels:
+          [__meta_docker_container_label_com_docker_compose_service]
+        target_label: service
+      - source_labels:
+          [__meta_docker_container_label_com_docker_compose_project]
+        target_label: project
+
+# Alert rules
+groups:
+  - name: business_intelligence
+    rules:
+      - alert: HighErrorRate
+        expr: rate(http_requests_total{status=~"5.."}[5m]) / rate(http_requests_total[5m]) > 0.1
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: High error rate detected
+          description: "Error rate is {{ $value | humanizePercentage }}"
+
+      - alert: HighLatency
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: High latency detected
+          description: "95th percentile latency is {{ $value }}s"
+
+      - alert: HighCPUUsage
+        expr: container_cpu_usage_seconds_total{container!=""} > 0.8
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: High CPU usage detected
+          description: "CPU usage is {{ $value | humanizePercentage }}"
+
+      - alert: HighMemoryUsage
+        expr: container_memory_usage_bytes{container!=""} / container_spec_memory_limit_bytes{container!=""} > 0.8
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: High memory usage detected
+          description: "Memory usage is {{ $value | humanizePercentage }}"
+
+      - alert: DatabaseConnectionError
+        expr: pg_up == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: Database connection error
+          description: "Database connection is down"
+
+      - alert: RedisConnectionError
+        expr: redis_up == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: Redis connection error
+          description: "Redis connection is down"
+
+      - alert: CeleryWorkerDown
+        expr: celery_workers == 0
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: No Celery workers running
+          description: "All Celery workers are down"
+
+      - alert: ModelPredictionError
+        expr: rate(model_prediction_errors_total[5m]) > 0.1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: High model prediction error rate
+          description: "Model prediction error rate is {{ $value | humanizePercentage }}"
+
+      - alert: DataSyncDelay
+        expr: time() - data_sync_timestamp > 3600
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: Data sync delay
+          description: "Data sync is delayed by {{ $value | humanizeDuration }}"
