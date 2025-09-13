@@ -1,18 +1,58 @@
-import expresss from 'express';
-import cors from 'cors';
+import express from "express";
+import cors from "cors";
+import 'dotenv/config'
+import cookieParser from "cookie-parser";
+import session from "express-session";
+import connectDB from "./config/db.js";
+import passport from "./config/passport.js";
+import userRouter from "./routes/user.routes.js";
 
-//app config
-const app = expresss();
-const port = 5000;
+// dotenv.config({ path: "./.env" });
 
-//middleware
-app.use(cors());
-app.use(expresss.json());
+const app = express();
+const port = process.env.PORT || 5000;
 
-app.get('/', (req, res) => {
-  res.send('API Working...');
+// Middleware
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL || process.env.CORS_ORIGIN,
+    credentials: true,
+  })
+);
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || "1234",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Routes
+app.use("/api/auth", userRouter);
+
+app.get("/", (req, res) => {
+  res.send("API Working...");
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
-});
+// Database connection and server start
+connectDB()
+  .then(() => {
+    app.on("error", (err) => {
+      console.log(`Error: ${err}`);
+      throw err;
+    });
+
+    app.listen(port, () => {
+      console.log(`Server running on http://localhost:${port}`);
+    });
+  })
+  .catch((err) => {
+    console.log(`MongoDB connection failed: ${err}`);
+  });
+
+export default app ;

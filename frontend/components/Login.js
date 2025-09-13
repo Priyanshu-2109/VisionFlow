@@ -2,30 +2,88 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import { motion } from "framer-motion";
 import { FcGoogle } from "react-icons/fc";
+import axios from "axios";
 
 export default function Login({ onClose }) {
   const router = useRouter();
   const [state, setState] = useState("Login");
-  const [name, setName] = useState("");
+  const [username, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [image, setImage] = useState(null);
-  const [isTextDataSubmitted, setIsTextDataSubmitted] = useState(false);
+  const [phone, setPhone] = useState(""); // Added phone state
+  const [error, setError] = useState("");
+
+  const backendUrl =
+    process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (state === "Sign Up" && !isTextDataSubmitted) {
-      return setIsTextDataSubmitted(true);
+    setError("");
+    
+    try {
+      if (state === "Login") {
+        const response = await axios.post(`${backendUrl}/login`, {
+          email,
+          password,
+        });
+
+        if (response.data.token) {
+          localStorage.setItem("token", response.data.token);
+          localStorage.setItem("user", JSON.stringify(response.data));
+          onClose();
+          router.push("/");
+        }
+      } else {
+        const response = await axios.post(`${backendUrl}/register`, {
+          username,
+          email,
+          password,
+          phone, // Added phone to the registration payload
+        });
+
+        if (response.data.token) {
+          localStorage.setItem("token", response.data.token);
+          localStorage.setItem("user", JSON.stringify(response.data));
+          onClose();
+          router.push("/");
+        }
+      }
+    } catch (err) {
+      setError(err.response?.data?.message || "An error occurred");
+      console.log(err);
     }
-    // Handle login/signup logic here
   };
 
   const handleGoogleLogin = async () => {
-    // TODO: Implement Google authentication logic
-    console.log("Google Login Clicked");
+    try {
+      const width = 500;
+      const height = 600;
+      const left = window.screen.width / 2 - width / 2;
+      const top = window.screen.height / 2 - height / 2;
+
+      const popup = window.open(
+        `${backendUrl}/auth/google/callback`,
+        "Google Login",
+        `width=${width},height=${height},left=${left},top=${top}`
+      );
+
+      window.addEventListener("message", async (event) => {
+        if (event.origin === "{backendUrl}") {
+          if (event.data.success) {
+            localStorage.setItem("token", event.data.token);
+            localStorage.setItem("user", JSON.stringify(event.data.user));
+            onClose();
+            router.push("/");
+          } else {
+            setError(event.data.message || "Google login failed");
+          }
+        }
+      });
+    } catch (error) {
+      setError("Failed to initiate Google login");
+    }
   };
 
   useEffect(() => {
@@ -81,65 +139,51 @@ export default function Login({ onClose }) {
             {state === "Login" ? "Welcome back!" : "Welcome!"}
           </h1>
           <p className="text-sm text-gray-400 text-center mb-6">
-            {state === "Login" 
-              ? "Please sign in to continue your journey" 
+            {state === "Login"
+              ? "Please sign in to continue your journey"
               : "Create an account to get started"}
           </p>
         </div>
 
-        {state === "Sign Up" && isTextDataSubmitted ? (
-          <div className="flex flex-col items-center gap-4 mb-6">
-            <label htmlFor="image" className="cursor-pointer group">
-              <div className="w-20 h-20 rounded-full border-2 border-blue-500 flex items-center justify-center overflow-hidden group-hover:border-blue-400 transition-colors">
-                <Image
-                  src={
-                    image ? URL.createObjectURL(image) : "/placeholder-image.png"
-                  }
-                  alt="Upload"
-                  width={80}
-                  height={80}
-                  className="rounded-full"
-                />
-              </div>
-              <input
-                type="file"
-                id="image"
-                hidden
-                onChange={(e) => setImage(e.target.files[0])}
-              />
-            </label>
-            <p className="text-sm text-gray-400">Upload Company Logo</p>
-          </div>
-        ) : (
-          <>
-            {state === "Sign Up" && (
-              <input
-                type="text"
-                placeholder="Company Name"
-                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg mb-4 text-white placeholder:text-gray-500 focus:outline-none focus:border-blue-500 transition-colors"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-              />
-            )}
-            <input
-              type="email"
-              placeholder="Email Address"
-              className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg mb-4 text-white placeholder:text-gray-500 focus:outline-none focus:border-blue-500 transition-colors"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-            <input
-              type="password"
-              placeholder="Password"
-              className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg mb-4 text-white placeholder:text-gray-500 focus:outline-none focus:border-blue-500 transition-colors"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </>
+        {state === "Sign Up" && (
+          <input
+            type="text"
+            placeholder="Full Name"
+            className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg mb-4 text-white placeholder:text-gray-500 focus:outline-none focus:border-blue-500 transition-colors"
+            value={username}
+            onChange={(e) => setName(e.target.value)}
+            required
+          />
         )}
+
+        {/* Phone input field - only shown during sign up */}
+        {state === "Sign Up" && (
+          <input
+            type="tel"
+            placeholder="Phone Number"
+            className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg mb-4 text-white placeholder:text-gray-500 focus:outline-none focus:border-blue-500 transition-colors"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            required
+          />
+        )}
+
+        <input
+          type="email"
+          placeholder="Email Address"
+          className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg mb-4 text-white placeholder:text-gray-500 focus:outline-none focus:border-blue-500 transition-colors"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg mb-4 text-white placeholder:text-gray-500 focus:outline-none focus:border-blue-500 transition-colors"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
 
         {state === "Login" && (
           <p className="text-sm text-blue-400 hover:text-blue-300 text-right cursor-pointer mb-4 transition-colors">
@@ -147,15 +191,15 @@ export default function Login({ onClose }) {
           </p>
         )}
 
-        <button 
-          type="submit" 
+        {error && (
+          <div className="text-red-500 text-sm text-center mb-4">{error}</div>
+        )}
+
+        <button
+          type="submit"
           className="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white py-3 text-md font-medium rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300 shadow-md"
         >
-          {state === "Login"
-            ? "Login"
-            : isTextDataSubmitted
-            ? "Create Account"
-            : "Next"}
+          {state === "Login" ? "Login" : "Sign Up"}
         </button>
 
         {/* Separator Line */}
